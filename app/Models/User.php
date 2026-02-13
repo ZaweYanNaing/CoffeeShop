@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
-use Laravel\Sanctum\HasApiTokens;
+use App\Traits\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -24,6 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
+        'api_token',
     ];
 
     /**

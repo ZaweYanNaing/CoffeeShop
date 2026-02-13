@@ -20,7 +20,7 @@ Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{product}', [ProductController::class, 'show']);
 
 // Protected Routes
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth.api')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'me']);
 
