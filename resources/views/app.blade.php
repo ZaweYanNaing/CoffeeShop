@@ -40,10 +40,9 @@
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
         @viteReactRefresh
-        @vite(['resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
-        @inertiaHead
+        @vite('resources/js/app.tsx')
     </head>
-    <body class="font-sans antialiased">
-        @inertia
+    <body class="font-sans antialiased text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900">
+        <div id="root"></div>
     </body>
 </html>

@@ -1,32 +1,22 @@
-import { createInertiaApp } from '@inertiajs/react';
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { StrictMode } from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { RouterProvider } from 'react-router-dom';
+import router from './router';
 import '../css/app.css';
-import { initializeTheme } from './hooks/use-appearance';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+import { AuthProvider } from './contexts/AuthContext';
+import { CartProvider } from './contexts/CartContext';
 
-createInertiaApp({
-    title: (title) => (title ? `${title} - ${appName}` : appName),
-    resolve: (name) =>
-        resolvePageComponent(
-            `./pages/${name}.tsx`,
-            import.meta.glob('./pages/**/*.tsx'),
-        ),
-    setup({ el, App, props }) {
-        const root = createRoot(el);
+const rootElement = document.getElementById('root');
 
-        root.render(
-            <StrictMode>
-                <App {...props} />
-            </StrictMode>,
-        );
-    },
-    progress: {
-        color: '#4B5563',
-    },
-});
-
-// This will set light / dark mode on load...
-initializeTheme();
+if (rootElement) {
+    createRoot(rootElement).render(
+        <React.StrictMode>
+            <AuthProvider>
+                <CartProvider>
+                    <RouterProvider router={router} />
+                </CartProvider>
+            </AuthProvider>
+        </React.StrictMode>
+    );
+}

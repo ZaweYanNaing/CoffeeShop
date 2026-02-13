@@ -1,0 +1,89 @@
+name: coffee
+
+volumes:
+  coffee_mysql_data:
+    driver: local
+  redis:
+    driver: local
+  minio:
+    driver: local
+  mailpit:
+    driver: local
+
+networks:
+  coffee_network:
+    driver: bridge
+
+services:
+  mysql:
+    restart: unless-stopped
+    image: mysql/mysql-server:8.0
+    container_name: coffee_mysql
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    volumes:
+      - './mysql-data:/var/lib/mysql'
+    networks:
+      - coffee_network
+    healthcheck:
+      test: [ 'CMD', 'mysqladmin', 'ping', '-p${DB_PASSWORD}' ]
+      retries: 3
+      timeout: 5s
+
+  redis:
+    restart: unless-stopped
+    image: redis:alpine
+    container_name: coffee_redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis:/data'
+    networks:
+      - coffee_network
+    healthcheck:
+      test: [ 'CMD', 'redis-cli', 'ping' ]
+      retries: 3
+      timeout: 5s
+
+  minio:
+    restart: unless-stopped
+    image: minio/minio:latest
+    container_name: coffee_minio
+    ports:
+      - '9000:9000'
+      - '8900:8900'
+    environment:
+      MINIO_ROOT_USER: '${MINIO_USERNAME}'
+      MINIO_ROOT_PASSWORD: '${MINIO_PASSWORD}'
+    volumes:
+      - 'minio:/data'
+    networks:
+      - coffee_network
+    command: minio server /data --console-address ":8900"
+    healthcheck:
+      test: [ 'CMD', 'mc', 'ready', 'local' ]
+      retries: 3
+      timeout: 5s
+
+  mailpit:
+    restart: unless-stopped
+    image: axllent/mailpit:latest
+    container_name: coffee_mailpit
+    environment:
+      MP_DATABASE: '/data/mailpit.db'
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    volumes:
+      - 'mailpit:/data'
+    networks:
+      - coffee_network
