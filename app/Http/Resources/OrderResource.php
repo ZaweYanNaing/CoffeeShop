@@ -21,6 +21,13 @@ class OrderResource extends JsonResource
             'payment_status' => $this->payment_status,
             'payment_method' => $this->payment_method,
             'created_at' => $this->created_at->toIso8601String(),
+            'user' => $this->when($request->user()?->is_admin, function () {
+                return [
+                    'id' => $this->user->id,
+                    'name' => $this->user->name,
+                    'email' => $this->user->email,
+                ];
+            }),
             'items' => OrderItemResource::collection($this->whenLoaded('items')),
         ];
     }

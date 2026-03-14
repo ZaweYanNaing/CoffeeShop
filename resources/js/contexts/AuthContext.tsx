@@ -24,7 +24,9 @@ export const AuthProvider = ({ children }) => {
     const fetchUser = async () => {
         try {
             const response = await axios.get('/api/user');
-            setUser(response.data);
+            // Laravel API resources wrap in "data" key when returned directly
+            const userData = response.data?.data ?? response.data;
+            setUser(userData);
         } catch (error) {
             console.error('Failed to fetch user', error);
             logout();
@@ -36,14 +38,16 @@ export const AuthProvider = ({ children }) => {
     const login = async (email, password) => {
         try {
             const response = await axios.post('/api/login', { email, password });
-            const { access_token, user } = response.data;
+            const { access_token, user: userFromApi } = response.data;
+            // Handle wrapped user (e.g. from Resource in some setups)
+            const user = userFromApi?.data ?? userFromApi;
 
             localStorage.setItem('token', access_token);
             setToken(access_token);
             setUser(user);
             axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
 
-            return true;
+            return user;
         } catch (error) {
             console.error('Login failed', error);
             throw error;

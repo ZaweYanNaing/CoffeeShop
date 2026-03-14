@@ -17,8 +17,8 @@ const Login = () => {
         setLoading(true);
 
         try {
-            await login(email, password);
-            navigate('/');
+            const user = await login(email, password);
+            navigate(user?.is_admin ? '/admin' : '/');
         } catch (err) {
             setError('Failed to login. Please checks your credentials.');
         } finally {

@@ -14,8 +14,8 @@ class ReservationController extends Controller
      */
     public function index(Request $request)
     {
-        $reservations = $request->user()->is_admin 
-            ? Reservation::latest()->get()
+        $reservations = $request->user()->is_admin
+            ? Reservation::with('user')->latest()->get()
             : $request->user()->reservations()->latest()->get();
 
         return ReservationResource::collection($reservations);
@@ -37,7 +37,7 @@ class ReservationController extends Controller
         ]);
 
         $reservation = Reservation::create([
-            'user_id' => $request->user() ? $request->user()->id : null, 
+            'user_id' => $request->user() ? $request->user()->id : null,
             'name' => $validated['name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'] ?? null,
@@ -47,6 +47,24 @@ class ReservationController extends Controller
             'status' => 'pending',
             'special_request' => $validated['special_request'] ?? null,
         ]);
+
+        return new ReservationResource($reservation);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Reservation $reservation)
+    {
+        if (! $request->user()->is_admin) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'status' => 'sometimes|in:pending,confirmed,cancelled',
+        ]);
+
+        $reservation->update($validated);
 
         return new ReservationResource($reservation);
     }

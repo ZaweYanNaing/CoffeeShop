@@ -1,24 +1,171 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { Package, FolderTree, ShoppingBag, Calendar, TrendingUp, DollarSign } from 'lucide-react';
+
+interface Stats {
+    totalProducts: number;
+    totalCategories: number;
+    totalOrders: number;
+    totalReservations: number;
+    pendingOrders: number;
+    pendingReservations: number;
+    totalRevenue: number;
+}
 
 const AdminDashboard = () => {
+    const [stats, setStats] = useState<Stats | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetchStats();
+    }, []);
+
+    const fetchStats = async () => {
+        try {
+            const [productsRes, categoriesRes, ordersRes, reservationsRes] = await Promise.all([
+                axios.get('/api/products'),
+                axios.get('/api/categories'),
+                axios.get('/api/orders'),
+                axios.get('/api/reservations'),
+            ]);
+
+            const orders = ordersRes.data;
+            const reservations = reservationsRes.data;
+            const pendingOrders = orders.filter((o: any) => o.status === 'pending').length;
+            const pendingReservations = reservations.filter((r: any) => r.status === 'pending').length;
+            const totalRevenue = orders.reduce((sum: number, o: any) => sum + parseFloat(o.total_price || 0), 0);
+
+            setStats({
+                totalProducts: productsRes.data.length,
+                totalCategories: categoriesRes.data.length,
+                totalOrders: orders.length,
+                totalReservations: reservations.length,
+                pendingOrders,
+                pendingReservations,
+                totalRevenue,
+            });
+        } catch (error) {
+            console.error('Failed to fetch stats', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600"></div>
+            </div>
+        );
+    }
+
+    const statCards = [
+        {
+            title: 'Total Products',
+            value: stats?.totalProducts || 0,
+            icon: Package,
+            color: 'bg-blue-500',
+            link: '/admin/products',
+        },
+        {
+            title: 'Total Categories',
+            value: stats?.totalCategories || 0,
+            icon: FolderTree,
+            color: 'bg-green-500',
+            link: '/admin/categories',
+        },
+        {
+            title: 'Total Orders',
+            value: stats?.totalOrders || 0,
+            icon: ShoppingBag,
+            color: 'bg-purple-500',
+            link: '/admin/orders',
+        },
+        {
+            title: 'Total Reservations',
+            value: stats?.totalReservations || 0,
+            icon: Calendar,
+            color: 'bg-orange-500',
+            link: '/admin/reservations',
+        },
+        {
+            title: 'Pending Orders',
+            value: stats?.pendingOrders || 0,
+            icon: ShoppingBag,
+            color: 'bg-yellow-500',
+            link: '/admin/orders?status=pending',
+        },
+        {
+            title: 'Pending Reservations',
+            value: stats?.pendingReservations || 0,
+            icon: Calendar,
+            color: 'bg-yellow-500',
+            link: '/admin/reservations?status=pending',
+        },
+        {
+            title: 'Total Revenue',
+            value: `$${stats?.totalRevenue.toFixed(2) || '0.00'}`,
+            icon: DollarSign,
+            color: 'bg-emerald-500',
+            link: '/admin/orders',
+        },
+    ];
+
     return (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-8 dark:text-white">Admin Dashboard</h1>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                    <h3 className="text-xl font-semibold mb-2 dark:text-white">Orders</h3>
-                    <p className="text-gray-600 dark:text-gray-400">View and manage customer orders.</p>
+        <div>
+            <div className="mb-8">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Admin Dashboard</h1>
+                <p className="text-gray-600 dark:text-gray-400">Welcome back! Here's an overview of your coffee shop.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {statCards.map((stat) => {
+                    const Icon = stat.icon;
+                    return (
+                        <Link
+                            key={stat.title}
+                            to={stat.link}
+                            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+                        >
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{stat.title}</p>
+                                    <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">{stat.value}</p>
+                                </div>
+                                <div className={`${stat.color} p-3 rounded-lg`}>
+                                    <Icon className="text-white" size={24} />
+                                </div>
+                            </div>
+                        </Link>
+                    );
+                })}
+            </div>
+
+            <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                    <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h2>
+                    <div className="space-y-3">
+                        <Link
+                            to="/admin/products/new"
+                            className="block w-full text-left px-4 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors"
+                        >
+                            + Add New Product
+                        </Link>
+                        <Link
+                            to="/admin/categories/new"
+                            className="block w-full text-left px-4 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition-colors"
+                        >
+                            + Add New Category
+                        </Link>
+                    </div>
                 </div>
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                    <h3 className="text-xl font-semibold mb-2 dark:text-white">Reservations</h3>
-                    <p className="text-gray-600 dark:text-gray-400">Manage table bookings.</p>
-                </div>
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                    <h3 className="text-xl font-semibold mb-2 dark:text-white">Menu Items</h3>
-                    <p className="text-gray-600 dark:text-gray-400">Add or edit products.</p>
+
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                    <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Recent Activity</h2>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">Activity feed coming soon...</p>
                 </div>
             </div>
-            <p className="mt-8 text-center text-gray-500">Admin features are implemented in the API. Frontend interface coming soon.</p>
         </div>
     );
 };

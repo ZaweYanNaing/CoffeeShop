@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
-use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,8 +16,8 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        $orders = $request->user()->is_admin 
-            ? Order::with('items.product')->latest()->get()
+        $orders = $request->user()->is_admin
+            ? Order::with(['items.product', 'user'])->latest()->get()
             : $request->user()->orders()->with('items.product')->latest()->get();
 
         return OrderResource::collection($orders);
@@ -69,10 +68,11 @@ class OrderController extends Controller
 
             DB::commit();
 
-            return new OrderResource($order->load('items.product'));
+            return new OrderResource($order->load(['items.product', 'user']));
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json(['message' => 'Order failed', 'error' => $e->getMessage()], 500);
         }
     }
@@ -82,10 +82,29 @@ class OrderController extends Controller
      */
     public function show(Request $request, Order $order)
     {
-        if (!$request->user()->is_admin && $order->user_id !== $request->user()->id) {
+        if (! $request->user()->is_admin && $order->user_id !== $request->user()->id) {
             abort(403);
         }
 
-        return new OrderResource($order->load('items.product'));
+        return new OrderResource($order->load(['items.product', 'user']));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Order $order)
+    {
+        if (! $request->user()->is_admin) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'status' => 'sometimes|in:pending,processing,completed,cancelled',
+            'payment_status' => 'sometimes|in:pending,paid,failed',
+        ]);
+
+        $order->update($validated);
+
+        return new OrderResource($order->load(['items.product', 'user']));
     }
 }
