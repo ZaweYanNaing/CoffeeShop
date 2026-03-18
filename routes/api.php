@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\UserSettingsController;
 use Illuminate\Support\Facades\Route;
 
 // Public Routes
@@ -22,6 +23,8 @@ Route::get('/products/{product}', [ProductController::class, 'show']);
 Route::middleware('auth.api')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'me']);
+    Route::put('/profile', [UserSettingsController::class, 'updateProfile']);
+    Route::put('/password', [UserSettingsController::class, 'updatePassword']);
 
     // Orders
     Route::post('/orders', [OrderController::class, 'store']);
