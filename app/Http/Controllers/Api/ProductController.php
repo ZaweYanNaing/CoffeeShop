@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
@@ -38,9 +39,15 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
-            'image' => 'nullable|string',
+            'image' => 'nullable|image|max:4096',
             'is_available' => 'boolean',
         ]);
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->storePublicly('products', 'public');
+            unset($validated['image']);
+        }
 
         $product = Product::create([
             'name' => $validated['name'],
@@ -48,7 +55,7 @@ class ProductController extends Controller
             'category_id' => $validated['category_id'],
             'description' => $validated['description'],
             'price' => $validated['price'],
-            'image' => $validated['image'] ?? null,
+            'image' => $imagePath,
             'is_available' => $validated['is_available'] ?? true,
         ]);
 
@@ -73,12 +80,21 @@ class ProductController extends Controller
             'category_id' => 'sometimes|required|exists:categories,id',
             'description' => 'sometimes|required|string',
             'price' => 'sometimes|required|numeric|min:0',
-            'image' => 'nullable|string',
+            'image' => 'nullable|image|max:4096',
             'is_available' => 'boolean',
         ]);
 
         if (isset($validated['name'])) {
             $product->slug = Str::slug($validated['name']);
+        }
+
+        if ($request->hasFile('image')) {
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+
+            $product->image = $request->file('image')->storePublicly('products', 'public');
+            unset($validated['image']);
         }
 
         $product->update($validated);

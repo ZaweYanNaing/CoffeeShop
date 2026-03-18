@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Search, Eye, Calendar } from 'lucide-react';
+import { Search, Eye } from 'lucide-react';
+import { unwrapResourceCollection } from '@/lib/laravel';
 
 interface Reservation {
     id: number;
@@ -34,7 +35,7 @@ const Reservations = () => {
     const fetchReservations = async () => {
         try {
             const response = await axios.get('/api/reservations');
-            setReservations(response.data);
+            setReservations(unwrapResourceCollection<Reservation>(response.data));
         } catch (error) {
             console.error('Failed to fetch reservations', error);
         } finally {
@@ -42,7 +43,7 @@ const Reservations = () => {
         }
     };
 
-    const handleStatusUpdate = async (reservationId: number, status: string) => {
+    const handleStatusUpdate = async (reservationId: number, status: Reservation['status']) => {
         try {
             await axios.put(`/api/reservations/${reservationId}`, { status });
             fetchReservations();
@@ -175,7 +176,9 @@ const Reservations = () => {
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <select
                                         value={reservation.status}
-                                        onChange={(e) => handleStatusUpdate(reservation.id, e.target.value)}
+                                        onChange={(e) =>
+                                            handleStatusUpdate(reservation.id, e.target.value as Reservation['status'])
+                                        }
                                         className={`text-xs font-semibold px-2 py-1 rounded-full border-0 ${getStatusColor(
                                             reservation.status
                                         )} focus:outline-none focus:ring-2 focus:ring-amber-500`}
@@ -280,7 +283,9 @@ const Reservations = () => {
                                     <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Status</h3>
                                     <select
                                         value={selectedReservation.status}
-                                        onChange={(e) => handleStatusUpdate(selectedReservation.id, e.target.value)}
+                                    onChange={(e) =>
+                                        handleStatusUpdate(selectedReservation.id, e.target.value as Reservation['status'])
+                                    }
                                         className={`px-4 py-2 rounded-lg border-0 ${getStatusColor(
                                             selectedReservation.status
                                         )} focus:outline-none focus:ring-2 focus:ring-amber-500 font-semibold`}

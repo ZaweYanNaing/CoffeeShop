@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Plus, Edit, Trash2, Search, ArrowLeft } from 'lucide-react';
+import { Plus, Edit, Trash2, Search } from 'lucide-react';
+import { unwrapResourceCollection } from '@/lib/laravel';
 
 interface Product {
     id: number;
@@ -29,12 +30,12 @@ const Products = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+    const [imageFile, setImageFile] = useState<File | null>(null);
     const [formData, setFormData] = useState({
         name: '',
         category_id: '',
         description: '',
         price: '',
-        image: '',
         is_available: true,
     });
     const navigate = useNavigate();
@@ -47,7 +48,7 @@ const Products = () => {
     const fetchProducts = async () => {
         try {
             const response = await axios.get('/api/products');
-            setProducts(response.data);
+            setProducts(unwrapResourceCollection<Product>(response.data));
         } catch (error) {
             console.error('Failed to fetch products', error);
         } finally {
@@ -58,7 +59,7 @@ const Products = () => {
     const fetchCategories = async () => {
         try {
             const response = await axios.get('/api/categories');
-            setCategories(response.data);
+            setCategories(unwrapResourceCollection<Category>(response.data));
         } catch (error) {
             console.error('Failed to fetch categories', error);
         }
@@ -69,7 +70,7 @@ const Products = () => {
 
         try {
             await axios.delete(`/api/products/${id}`);
-            setProducts(products.filter((p) => p.id !== id));
+            setProducts((current) => current.filter((p) => p.id !== id));
         } catch (error) {
             console.error('Failed to delete product', error);
             alert('Failed to delete product');
@@ -78,12 +79,12 @@ const Products = () => {
 
     const handleEdit = (product: Product) => {
         setEditingProduct(product);
+        setImageFile(null);
         setFormData({
             name: product.name,
             category_id: product.category?.id.toString() || '',
             description: product.description,
             price: product.price.toString(),
-            image: product.image || '',
             is_available: product.is_available,
         });
         setShowModal(true);
@@ -91,12 +92,12 @@ const Products = () => {
 
     const handleCreate = () => {
         setEditingProduct(null);
+        setImageFile(null);
         setFormData({
             name: '',
             category_id: '',
             description: '',
             price: '',
-            image: '',
             is_available: true,
         });
         setShowModal(true);
@@ -105,17 +106,25 @@ const Products = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const payload = {
-                ...formData,
-                category_id: parseInt(formData.category_id),
-                price: parseFloat(formData.price),
-                is_available: formData.is_available,
-            };
+            const payload = new FormData();
+            payload.append('name', formData.name);
+            payload.append('category_id', String(parseInt(formData.category_id)));
+            payload.append('description', formData.description);
+            payload.append('price', String(parseFloat(formData.price)));
+            payload.append('is_available', formData.is_available ? '1' : '0');
+            if (imageFile) {
+                payload.append('image', imageFile);
+            }
 
             if (editingProduct) {
-                await axios.put(`/api/products/${editingProduct.id}`, payload);
+                payload.append('_method', 'PUT');
+                await axios.post(`/api/products/${editingProduct.id}`, payload, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                });
             } else {
-                await axios.post('/api/products', payload);
+                await axios.post('/api/products', payload, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                });
             }
 
             setShowModal(false);
@@ -327,12 +336,24 @@ const Products = () => {
                                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                         Image URL
                                     </label>
+                                    {editingProduct?.image && (
+                                        <div className="mb-3">
+                                            <img
+                                                src={editingProduct.image}
+                                                alt={editingProduct.name}
+                                                className="h-20 w-20 rounded-lg object-cover border border-gray-200 dark:border-gray-700"
+                                            />
+                                        </div>
+                                    )}
                                     <input
-                                        type="url"
-                                        value={formData.image}
-                                        onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
                                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
                                     />
+                                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                        Upload a product image (max 4MB).
+                                    </p>
                                 </div>
 
                                 <div className="flex items-center">

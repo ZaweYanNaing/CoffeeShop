@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Package, FolderTree, ShoppingBag, Calendar, TrendingUp, DollarSign } from 'lucide-react';
+import { Package, FolderTree, ShoppingBag, Calendar, DollarSign } from 'lucide-react';
+import { unwrapResourceCollection } from '@/lib/laravel';
 
 interface Stats {
     totalProducts: number;
@@ -30,15 +31,17 @@ const AdminDashboard = () => {
                 axios.get('/api/reservations'),
             ]);
 
-            const orders = ordersRes.data;
-            const reservations = reservationsRes.data;
+            const products = unwrapResourceCollection<any>(productsRes.data);
+            const categories = unwrapResourceCollection<any>(categoriesRes.data);
+            const orders = unwrapResourceCollection<any>(ordersRes.data);
+            const reservations = unwrapResourceCollection<any>(reservationsRes.data);
             const pendingOrders = orders.filter((o: any) => o.status === 'pending').length;
             const pendingReservations = reservations.filter((r: any) => r.status === 'pending').length;
             const totalRevenue = orders.reduce((sum: number, o: any) => sum + parseFloat(o.total_price || 0), 0);
 
             setStats({
-                totalProducts: productsRes.data.length,
-                totalCategories: categoriesRes.data.length,
+                totalProducts: products.length,
+                totalCategories: categories.length,
                 totalOrders: orders.length,
                 totalReservations: reservations.length,
                 pendingOrders,
@@ -142,30 +145,7 @@ const AdminDashboard = () => {
                 })}
             </div>
 
-            <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-                    <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h2>
-                    <div className="space-y-3">
-                        <Link
-                            to="/admin/products/new"
-                            className="block w-full text-left px-4 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors"
-                        >
-                            + Add New Product
-                        </Link>
-                        <Link
-                            to="/admin/categories/new"
-                            className="block w-full text-left px-4 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition-colors"
-                        >
-                            + Add New Category
-                        </Link>
-                    </div>
-                </div>
-
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-                    <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Recent Activity</h2>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm">Activity feed coming soon...</p>
-                </div>
-            </div>
+            
         </div>
     );
 };

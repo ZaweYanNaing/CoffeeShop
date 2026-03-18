@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Search, Eye, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { Search, Eye } from 'lucide-react';
+import { unwrapResourceCollection } from '@/lib/laravel';
 
 interface OrderItem {
     id: number;
@@ -42,7 +43,7 @@ const Orders = () => {
     const fetchOrders = async () => {
         try {
             const response = await axios.get('/api/orders');
-            setOrders(response.data);
+            setOrders(unwrapResourceCollection<Order>(response.data));
         } catch (error) {
             console.error('Failed to fetch orders', error);
         } finally {
@@ -50,7 +51,7 @@ const Orders = () => {
         }
     };
 
-    const handleStatusUpdate = async (orderId: number, status: string) => {
+    const handleStatusUpdate = async (orderId: number, status: Order['status']) => {
         try {
             await axios.put(`/api/orders/${orderId}`, { status });
             fetchOrders();
@@ -63,7 +64,7 @@ const Orders = () => {
         }
     };
 
-    const handlePaymentStatusUpdate = async (orderId: number, paymentStatus: string) => {
+    const handlePaymentStatusUpdate = async (orderId: number, paymentStatus: Order['payment_status']) => {
         try {
             await axios.put(`/api/orders/${orderId}`, { payment_status: paymentStatus });
             fetchOrders();
@@ -194,7 +195,7 @@ const Orders = () => {
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <select
                                         value={order.status}
-                                        onChange={(e) => handleStatusUpdate(order.id, e.target.value)}
+                                        onChange={(e) => handleStatusUpdate(order.id, e.target.value as Order['status'])}
                                         className={`text-xs font-semibold px-2 py-1 rounded-full border-0 ${getStatusColor(
                                             order.status
                                         )} focus:outline-none focus:ring-2 focus:ring-amber-500`}
@@ -208,7 +209,9 @@ const Orders = () => {
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <select
                                         value={order.payment_status}
-                                        onChange={(e) => handlePaymentStatusUpdate(order.id, e.target.value)}
+                                        onChange={(e) =>
+                                            handlePaymentStatusUpdate(order.id, e.target.value as Order['payment_status'])
+                                        }
                                         className={`text-xs font-semibold px-2 py-1 rounded-full border-0 ${getStatusColor(
                                             order.payment_status
                                         )} focus:outline-none focus:ring-2 focus:ring-amber-500`}

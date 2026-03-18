@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Plus, Edit, Trash2, Search } from 'lucide-react';
+import { unwrapResourceCollection } from '@/lib/laravel';
 
 interface Category {
     id: number;
@@ -29,7 +30,7 @@ const Categories = () => {
     const fetchCategories = async () => {
         try {
             const response = await axios.get('/api/categories');
-            setCategories(response.data);
+            setCategories(unwrapResourceCollection<Category>(response.data));
         } catch (error) {
             console.error('Failed to fetch categories', error);
         } finally {
@@ -44,7 +45,7 @@ const Categories = () => {
 
         try {
             await axios.delete(`/api/categories/${id}`);
-            setCategories(categories.filter((c) => c.id !== id));
+            setCategories((current) => current.filter((c) => c.id !== id));
         } catch (error: any) {
             console.error('Failed to delete category', error);
             alert(error.response?.data?.message || 'Failed to delete category');

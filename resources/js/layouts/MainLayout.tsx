@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
-import { Moon, Sun, ShoppingCart, User, LogOut } from 'lucide-react';
+import { Moon, Sun, ShoppingCart, User, LogOut, ChevronDown } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 
@@ -48,11 +48,39 @@ const MainLayout = () => {
                             )}
                         </Link>
                         {user ? (
-                            <div className="flex items-center gap-2">
-                                <span className="text-sm font-medium hidden sm:block">{user.name}</span>
-                                <button onClick={handleLogout} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700" title="Logout">
-                                    <LogOut size={20} />
+                            <div className="relative group">
+                                <button className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <span className="text-sm font-medium hidden sm:block">{user.name}</span>
+                                    <ChevronDown size={16} className="text-gray-500 dark:text-gray-300" />
                                 </button>
+
+                                <div className="hidden group-hover:block absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg overflow-hidden">
+                                    <Link
+                                        to="/profile"
+                                        className="block px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-700"
+                                    >
+                                        Profile
+                                    </Link>
+                                    <Link
+                                        to="/my-orders"
+                                        className="block px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-700"
+                                    >
+                                        My orders
+                                    </Link>
+                                    <Link
+                                        to="/my-reservations"
+                                        className="block px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-700"
+                                    >
+                                        My reservations
+                                    </Link>
+                                    <button
+                                        onClick={handleLogout}
+                                        className="w-full text-left px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2"
+                                    >
+                                        <LogOut size={16} />
+                                        Logout
+                                    </button>
+                                </div>
                             </div>
                         ) : (
                             <Link to="/login" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -63,7 +91,7 @@ const MainLayout = () => {
                 </div>
             </nav>
 
-            <main className="flex-grow">
+            <main className="grow">
                 <Outlet />
             </main>
 
