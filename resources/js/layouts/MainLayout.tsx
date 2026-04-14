@@ -1,5 +1,5 @@
-import React from 'react';
-import { Outlet, Link, useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { Moon, Sun, ShoppingCart, User, LogOut, ChevronDown } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
@@ -9,6 +9,14 @@ const MainLayout = () => {
     const { user, logout } = useAuth();
     const { cartCount } = useCart();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Redirect admin users from customer pages to admin dashboard
+    useEffect(() => {
+        if (user?.is_admin && (location.pathname === '/' || location.pathname === '/menu' || location.pathname === '/reservations')) {
+            navigate('/admin', { replace: true });
+        }
+    }, [user, location.pathname, navigate]);
 
     const toggleDarkMode = () => {
         setIsDarkMode(!isDarkMode);
@@ -29,24 +37,31 @@ const MainLayout = () => {
                     </Link>
 
                     <div className="hidden md:flex space-x-6 items-center">
-                        <Link to="/" className="hover:text-amber-600 transition">Home</Link>
-                        <Link to="/menu" className="hover:text-amber-600 transition">Menu</Link>
-                        {user && <Link to="/reservations" className="hover:text-amber-600 transition">Reservations</Link>}
-                        {user?.is_admin && <Link to="/admin" className="hover:text-amber-600 transition text-red-500 font-bold">Admin</Link>}
+                        {user?.is_admin ? (
+                            <Link to="/admin" className="hover:text-amber-600 transition text-red-500 font-bold">Admin Dashboard</Link>
+                        ) : (
+                            <>
+                                <Link to="/" className="hover:text-amber-600 transition">Home</Link>
+                                <Link to="/menu" className="hover:text-amber-600 transition">Menu</Link>
+                                {user && <Link to="/reservations" className="hover:text-amber-600 transition">Reservations</Link>}
+                            </>
+                        )}
                     </div>
 
                     <div className="flex items-center space-x-4">
                         <button onClick={toggleDarkMode} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
                             {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
                         </button>
-                        <Link to="/cart" className="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-                            <ShoppingCart size={20} />
-                            {cartCount > 0 && (
-                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                                    {cartCount}
-                                </span>
-                            )}
-                        </Link>
+                        {!user?.is_admin && (
+                            <Link to="/cart" className="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <ShoppingCart size={20} />
+                                {cartCount > 0 && (
+                                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                        {cartCount}
+                                    </span>
+                                )}
+                            </Link>
+                        )}
                         {user ? (
                             <div className="relative group">
                                 <button className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -61,18 +76,22 @@ const MainLayout = () => {
                                     >
                                         Profile
                                     </Link>
-                                    <Link
-                                        to="/my-orders"
-                                        className="block px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-700"
-                                    >
-                                        My orders
-                                    </Link>
-                                    <Link
-                                        to="/my-reservations"
-                                        className="block px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-700"
-                                    >
-                                        My reservations
-                                    </Link>
+                                    {!user?.is_admin && (
+                                        <>
+                                            <Link
+                                                to="/my-orders"
+                                                className="block px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-700"
+                                            >
+                                                My orders
+                                            </Link>
+                                            <Link
+                                                to="/my-reservations"
+                                                className="block px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-700"
+                                            >
+                                                My reservations
+                                            </Link>
+                                        </>
+                                    )}
                                     <button
                                         onClick={handleLogout}
                                         className="w-full text-left px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2"

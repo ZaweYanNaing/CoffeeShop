@@ -245,31 +245,35 @@ const Profile = () => {
                         </form>
                     </div>
 
-                    <Link
-                        to="/my-orders"
-                        className="group flex items-center gap-3 p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-amber-400 dark:hover:border-amber-500 transition"
-                    >
-                        <div className="h-10 w-10 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                            <ShoppingBag className="text-amber-700 dark:text-amber-400" size={20} />
-                        </div>
-                        <div>
-                            <p className="font-semibold text-gray-900 dark:text-white">Order history</p>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">View your past orders</p>
-                        </div>
-                    </Link>
+                    {!user?.is_admin && (
+                        <>
+                            <Link
+                                to="/my-orders"
+                                className="group flex items-center gap-3 p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-amber-400 dark:hover:border-amber-500 transition"
+                            >
+                                <div className="h-10 w-10 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                                    <ShoppingBag className="text-amber-700 dark:text-amber-400" size={20} />
+                                </div>
+                                <div>
+                                    <p className="font-semibold text-gray-900 dark:text-white">Order history</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">View your past orders</p>
+                                </div>
+                            </Link>
 
-                    <Link
-                        to="/my-reservations"
-                        className="group flex items-center gap-3 p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-amber-400 dark:hover:border-amber-500 transition"
-                    >
-                        <div className="h-10 w-10 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                            <Calendar className="text-amber-700 dark:text-amber-400" size={20} />
-                        </div>
-                        <div>
-                            <p className="font-semibold text-gray-900 dark:text-white">Reservation history</p>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Manage your bookings</p>
-                        </div>
-                    </Link>
+                            <Link
+                                to="/my-reservations"
+                                className="group flex items-center gap-3 p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-amber-400 dark:hover:border-amber-500 transition"
+                            >
+                                <div className="h-10 w-10 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                                    <Calendar className="text-amber-700 dark:text-amber-400" size={20} />
+                                </div>
+                                <div>
+                                    <p className="font-semibold text-gray-900 dark:text-white">Reservation history</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">Manage your bookings</p>
+                                </div>
+                            </Link>
+                        </>
+                    )}
                 </div>
             </div>
         </div>
