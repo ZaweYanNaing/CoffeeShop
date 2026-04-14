@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AnalyticsController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ReservationController;
@@ -53,5 +54,11 @@ Route::middleware('auth.api')->group(function () {
         Route::put('/reservations/{reservation}', [ReservationController::class, 'update']);
 
         Route::get('/analytics/daily-income', [AnalyticsController::class, 'dailyIncome']);
+
+        Route::get('/customers', [CustomerController::class, 'index']);
+        Route::get('/customers/stats', [CustomerController::class, 'stats']);
+        Route::get('/customers/{customer}', [CustomerController::class, 'show']);
+        Route::post('/customers/{customer}/ban', [CustomerController::class, 'ban']);
+        Route::post('/customers/{customer}/unban', [CustomerController::class, 'unban']);
     });
 });

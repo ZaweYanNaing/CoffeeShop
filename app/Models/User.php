@@ -25,6 +25,7 @@ class User extends Authenticatable
         'password',
         'is_admin',
         'api_token',
+        'banned_at',
     ];
 
     /**
@@ -51,7 +52,13 @@ class User extends Authenticatable
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
             'is_admin' => 'boolean',
+            'banned_at' => 'datetime',
         ];
+    }
+
+    public function isBanned(): bool
+    {
+        return $this->banned_at !== null;
     }
 
     public function orders()

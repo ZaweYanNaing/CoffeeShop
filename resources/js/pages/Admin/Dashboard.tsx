@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Package, FolderTree, ShoppingBag, Calendar, DollarSign } from 'lucide-react';
+import { Package, FolderTree, ShoppingBag, Calendar, DollarSign, Users, UserCheck } from 'lucide-react';
 import { unwrapResourceCollection } from '@/lib/laravel';
 import DailyIncomeChart from '@/components/DailyIncomeChart';
 
@@ -13,6 +13,8 @@ interface Stats {
     pendingOrders: number;
     pendingReservations: number;
     totalRevenue: number;
+    totalCustomers: number;
+    activeCustomers: number;
 }
 
 const AdminDashboard = () => {
@@ -25,11 +27,12 @@ const AdminDashboard = () => {
 
     const fetchStats = async () => {
         try {
-            const [productsRes, categoriesRes, ordersRes, reservationsRes] = await Promise.all([
+            const [productsRes, categoriesRes, ordersRes, reservationsRes, customersRes] = await Promise.all([
                 axios.get('/api/products'),
                 axios.get('/api/categories'),
                 axios.get('/api/orders'),
                 axios.get('/api/reservations'),
+                axios.get('/api/customers/stats'),
             ]);
 
             const products = unwrapResourceCollection<any>(productsRes.data);
@@ -48,6 +51,8 @@ const AdminDashboard = () => {
                 pendingOrders,
                 pendingReservations,
                 totalRevenue,
+                totalCustomers: customersRes.data.total_customers,
+                activeCustomers: customersRes.data.active_customers,
             });
         } catch (error) {
             console.error('Failed to fetch stats', error);
@@ -92,6 +97,20 @@ const AdminDashboard = () => {
             icon: Calendar,
             color: 'bg-orange-500',
             link: '/admin/reservations',
+        },
+        {
+            title: 'Total Customers',
+            value: stats?.totalCustomers || 0,
+            icon: Users,
+            color: 'bg-indigo-500',
+            link: '/admin/customers',
+        },
+        {
+            title: 'Active Customers',
+            value: stats?.activeCustomers || 0,
+            icon: UserCheck,
+            color: 'bg-teal-500',
+            link: '/admin/customers',
         },
         {
             title: 'Pending Orders',

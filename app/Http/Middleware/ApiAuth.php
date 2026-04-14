@@ -21,6 +21,10 @@ class ApiAuth
         if ($token) {
             $user = User::where('api_token', $token)->first();
             if ($user) {
+                if ($user->isBanned()) {
+                    return response()->json(['message' => 'Your account has been banned.'], 403);
+                }
+
                 // Manually log the user in for this request
                 auth()->setUser($user);
 

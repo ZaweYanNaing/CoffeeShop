@@ -18,6 +18,7 @@ import AdminProducts from './pages/Admin/Products';
 import AdminCategories from './pages/Admin/Categories';
 import AdminOrders from './pages/Admin/Orders';
 import AdminReservations from './pages/Admin/Reservations';
+import AdminCustomers from './pages/Admin/Customers';
 
 const router = createBrowserRouter([
     {
@@ -67,6 +68,7 @@ const router = createBrowserRouter([
                     { path: '/admin/categories', element: <AdminCategories /> },
                     { path: '/admin/orders', element: <AdminOrders /> },
                     { path: '/admin/reservations', element: <AdminReservations /> },
+                    { path: '/admin/customers', element: <AdminCustomers /> },
                 ],
             },
         ],

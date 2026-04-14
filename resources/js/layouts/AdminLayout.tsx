@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, FolderTree, ShoppingBag, Calendar, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, FolderTree, ShoppingBag, Calendar, LogOut, Users } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 const AdminLayout = () => {
@@ -19,6 +19,7 @@ const AdminLayout = () => {
         { path: '/admin/categories', label: 'Categories', icon: FolderTree },
         { path: '/admin/orders', label: 'Orders', icon: ShoppingBag },
         { path: '/admin/reservations', label: 'Reservations', icon: Calendar },
+        { path: '/admin/customers', label: 'Customers', icon: Users },
     ];
 
     const isActive = (path: string) => {
