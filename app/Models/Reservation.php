@@ -20,7 +20,7 @@ class Reservation extends Model
         'status', // pending, confirmed, cancelled
         'special_request',
     ];
-    
+
     protected $casts = [
         'reservation_date' => 'date',
     ];

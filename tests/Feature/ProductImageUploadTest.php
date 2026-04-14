@@ -22,7 +22,7 @@ test('admin can create product with uploaded image', function () {
     ]);
 
     $response = $this
-        ->withHeader('Authorization', 'Bearer ' . $admin->api_token)
+        ->withHeader('Authorization', 'Bearer '.$admin->api_token)
         ->post('/api/products', [
             'name' => 'Test Product',
             'category_id' => $category->id,
@@ -72,8 +72,8 @@ test('admin can update product image and old image is deleted', function () {
     $oldImage = $product->image;
 
     $response = $this
-        ->withHeader('Authorization', 'Bearer ' . $admin->api_token)
-        ->post('/api/products/' . $product->id, [
+        ->withHeader('Authorization', 'Bearer '.$admin->api_token)
+        ->post('/api/products/'.$product->id, [
             '_method' => 'PUT',
             'image' => UploadedFile::fake()->image('new.jpg'),
         ]);

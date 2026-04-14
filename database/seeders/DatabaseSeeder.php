@@ -2,12 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -36,13 +35,13 @@ class DatabaseSeeder extends Seeder
         $coffee = Category::create([
             'name' => 'Coffee',
             'slug' => 'coffee',
-            'description' => 'Freshly brewed coffee from premium beans.'
+            'description' => 'Freshly brewed coffee from premium beans.',
         ]);
 
         $pastries = Category::create([
             'name' => 'Pastries',
             'slug' => 'pastries',
-            'description' => 'Delicious baked goods to accompany your coffee.'
+            'description' => 'Delicious baked goods to accompany your coffee.',
         ]);
 
         // Products

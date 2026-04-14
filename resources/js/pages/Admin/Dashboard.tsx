@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Package, FolderTree, ShoppingBag, Calendar, DollarSign } from 'lucide-react';
 import { unwrapResourceCollection } from '@/lib/laravel';
+import DailyIncomeChart from '@/components/DailyIncomeChart';
 
 interface Stats {
     totalProducts: number;
@@ -145,7 +146,9 @@ const AdminDashboard = () => {
                 })}
             </div>
 
-            
+            <div className="mt-8">
+                <DailyIncomeChart />
+            </div>
         </div>
     );
 };

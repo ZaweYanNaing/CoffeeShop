@@ -16,7 +16,7 @@ class Order extends Model
         'payment_status', // pending, paid, failed
         'payment_method',
     ];
-    
+
     protected $casts = [
         'total_price' => 'decimal:2',
     ];

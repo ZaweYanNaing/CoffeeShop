@@ -35,7 +35,7 @@ const Cart = () => {
 
             clearCart();
             alert('Order placed successfully!');
-            navigate('/orders'); // Determine where to redirect
+            navigate('/my-orders');
         } catch (error) {
             console.error('Order failed', error);
             alert('Failed to place order. Please try again.');

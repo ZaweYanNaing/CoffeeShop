@@ -23,7 +23,7 @@ class ProductController extends Controller
         }
 
         if ($request->has('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%'.$request->search.'%');
         }
 
         return ProductResource::collection($query->get());
@@ -76,7 +76,7 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $validated = $request->validate([
-            'name' => 'sometimes|required|string|max:255|unique:products,name,' . $product->id,
+            'name' => 'sometimes|required|string|max:255|unique:products,name,'.$product->id,
             'category_id' => 'sometimes|required|exists:categories,id',
             'description' => 'sometimes|required|string',
             'price' => 'sometimes|required|numeric|min:0',

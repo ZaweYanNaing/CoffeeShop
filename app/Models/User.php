@@ -3,11 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Traits\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
-use App\Traits\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -53,7 +53,7 @@ class User extends Authenticatable
             'is_admin' => 'boolean',
         ];
     }
-    
+
     public function orders()
     {
         return $this->hasMany(Order::class);
@@ -63,7 +63,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Reservation::class);
     }
-    
+
     public function reviews()
     {
         return $this->hasMany(Review::class);

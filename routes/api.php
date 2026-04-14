@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AnalyticsController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\OrderController;
@@ -50,5 +51,7 @@ Route::middleware('auth.api')->group(function () {
 
         Route::put('/orders/{order}', [OrderController::class, 'update']);
         Route::put('/reservations/{reservation}', [ReservationController::class, 'update']);
+
+        Route::get('/analytics/daily-income', [AnalyticsController::class, 'dailyIncome']);
     });
 });

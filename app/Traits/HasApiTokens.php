@@ -9,8 +9,6 @@ trait HasApiTokens
     /**
      * Create a new personal access token for the user.
      *
-     * @param  string  $name
-     * @param  array  $abilities
      * @return \App\Traits\NewAccessToken
      */
     public function createToken(string $name, array $abilities = ['*'])
@@ -45,7 +43,6 @@ class NewAccessToken
     /**
      * Create a new access token result.
      *
-     * @param  string  $plainTextToken
      * @return void
      */
     public function __construct(string $plainTextToken)

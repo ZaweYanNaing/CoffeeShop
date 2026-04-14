@@ -60,7 +60,7 @@ test('orders history endpoint returns only authenticated user orders', function 
     ]);
 
     $response = $this
-        ->withHeader('Authorization', 'Bearer ' . $userA->api_token)
+        ->withHeader('Authorization', 'Bearer '.$userA->api_token)
         ->getJson('/api/orders');
 
     $response->assertSuccessful();
@@ -106,7 +106,7 @@ test('reservations history endpoint returns only authenticated user reservations
     ]);
 
     $response = $this
-        ->withHeader('Authorization', 'Bearer ' . $userA->api_token)
+        ->withHeader('Authorization', 'Bearer '.$userA->api_token)
         ->getJson('/api/reservations');
 
     $response->assertSuccessful();
