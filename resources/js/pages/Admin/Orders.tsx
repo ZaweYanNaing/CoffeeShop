@@ -20,6 +20,7 @@ interface Order {
     status: 'pending' | 'processing' | 'completed' | 'cancelled';
     payment_status: 'pending' | 'paid' | 'failed';
     payment_method: string;
+    payment_proof: string | null;
     created_at: string;
     user?: {
         id: number;
@@ -323,6 +324,41 @@ const Orders = () => {
                                         ))}
                                     </div>
                                 </div>
+
+                                {selectedOrder.payment_proof && (
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                                            Payment Proof
+                                        </h3>
+                                        <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                                            <img
+                                                src={selectedOrder.payment_proof}
+                                                alt="Payment proof"
+                                                className="w-full max-h-96 object-contain rounded-lg"
+                                            />
+                                            <div className="mt-4 flex gap-2">
+                                                <button
+                                                    onClick={() => handlePaymentStatusUpdate(selectedOrder.id, 'paid')}
+                                                    disabled={selectedOrder.payment_status === 'paid'}
+                                                    className={`flex-1 py-2 px-4 rounded-lg font-medium transition ${
+                                                        selectedOrder.payment_status === 'paid'
+                                                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                                            : 'bg-green-600 text-white hover:bg-green-700'
+                                                    }`}
+                                                >
+                                                    {selectedOrder.payment_status === 'paid' ? 'Already Confirmed' : 'Confirm Payment'}
+                                                </button>
+                                                <button
+                                                    onClick={() => handlePaymentStatusUpdate(selectedOrder.id, 'failed')}
+                                                    disabled={selectedOrder.payment_status === 'failed'}
+                                                    className="flex-1 py-2 px-4 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
+                                                >
+                                                    Reject Payment
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

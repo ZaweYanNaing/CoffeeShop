@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\RewardsController;
 use App\Http\Controllers\Api\UserSettingsController;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +40,10 @@ Route::middleware('auth.api')->group(function () {
 
     // Reviews
     Route::post('/reviews', [ReviewController::class, 'store']);
+
+    // Rewards
+    Route::get('/rewards', [RewardsController::class, 'index']);
+    Route::get('/rewards/products', [RewardsController::class, 'redeemableProducts']);
 
     // Admin Routes
     Route::middleware('is_admin')->group(function () {

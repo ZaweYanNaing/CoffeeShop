@@ -12,6 +12,8 @@ interface Product {
     price: number;
     image: string | null;
     is_available: boolean;
+    points_reward: number;
+    points_cost: number | null;
     category: {
         id: number;
         name: string;
@@ -37,6 +39,8 @@ const Products = () => {
         description: '',
         price: '',
         is_available: true,
+        points_reward: '0',
+        points_cost: '',
     });
     const navigate = useNavigate();
 
@@ -86,6 +90,8 @@ const Products = () => {
             description: product.description,
             price: product.price.toString(),
             is_available: product.is_available,
+            points_reward: product.points_reward?.toString() || '0',
+            points_cost: product.points_cost?.toString() || '',
         });
         setShowModal(true);
     };
@@ -99,6 +105,8 @@ const Products = () => {
             description: '',
             price: '',
             is_available: true,
+            points_reward: '0',
+            points_cost: '',
         });
         setShowModal(true);
     };
@@ -112,6 +120,10 @@ const Products = () => {
             payload.append('description', formData.description);
             payload.append('price', String(parseFloat(formData.price)));
             payload.append('is_available', formData.is_available ? '1' : '0');
+            payload.append('points_reward', String(parseInt(formData.points_reward) || 0));
+            if (formData.points_cost) {
+                payload.append('points_cost', String(parseInt(formData.points_cost)));
+            }
             if (imageFile) {
                 payload.append('image', imageFile);
             }
@@ -330,6 +342,40 @@ const Products = () => {
                                         onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
                                     />
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                            Points Reward
+                                        </label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            value={formData.points_reward}
+                                            onChange={(e) => setFormData({ ...formData, points_reward: e.target.value })}
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                        />
+                                        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                            Points customers earn when buying this
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                            Points Cost (Optional)
+                                        </label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            value={formData.points_cost}
+                                            onChange={(e) => setFormData({ ...formData, points_cost: e.target.value })}
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                        />
+                                        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                            Points needed to redeem this for free
+                                        </p>
+                                    </div>
                                 </div>
 
                                 <div>

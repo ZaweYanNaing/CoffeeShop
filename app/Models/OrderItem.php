@@ -15,6 +15,7 @@ class OrderItem extends Model
         'quantity',
         'unit_price',
         'subtotal',
+        'points_used',
     ];
 
     protected $casts = [

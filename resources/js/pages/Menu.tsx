@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useCart } from '../contexts/CartContext';
-import { Loader2, Plus } from 'lucide-react';
+import { Loader2, Plus, Gift } from 'lucide-react';
 
 interface Category {
     id: number;
@@ -16,6 +16,8 @@ interface Product {
     image: string;
     category: Category;
     is_available: boolean;
+    points_reward: number;
+    points_cost: number | null;
 }
 
 const Menu = () => {
@@ -110,9 +112,15 @@ const Menu = () => {
                                     ${Number(product.price).toFixed(2)}
                                 </span>
                             </div>
-                            <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
+                            <p className="text-gray-600 dark:text-gray-400 text-sm mb-2 line-clamp-2">
                                 {product.description}
                             </p>
+                            {product.points_reward > 0 && (
+                                <div className="flex items-center gap-1 text-amber-600 dark:text-amber-400 text-xs mb-3">
+                                    <Gift size={14} />
+                                    <span>Earn {product.points_reward} points</span>
+                                </div>
+                            )}
                             <button
                                 onClick={() => addToCart(product)}
                                 disabled={!product.is_available}

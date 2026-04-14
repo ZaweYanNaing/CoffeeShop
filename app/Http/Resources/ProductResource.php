@@ -23,6 +23,8 @@ class ProductResource extends JsonResource
             'price' => (float) $this->price,
             'image' => $this->image ? Storage::url($this->image) : null,
             'is_available' => $this->is_available,
+            'points_cost' => $this->points_cost,
+            'points_reward' => $this->points_reward,
             'category' => new CategoryResource($this->whenLoaded('category')),
             'reviews_avg_rating' => $this->whenAggregated('reviews', 'rating', 'avg'),
             'reviews_count' => $this->whenCounted('reviews'),

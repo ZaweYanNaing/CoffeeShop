@@ -75,4 +75,39 @@ class User extends Authenticatable
     {
         return $this->hasMany(Review::class);
     }
+
+    public function rewardTransactions()
+    {
+        return $this->hasMany(RewardTransaction::class);
+    }
+
+    public function addRewardPoints(int $points, string $description, ?int $orderId = null): void
+    {
+        $this->increment('reward_points', $points);
+
+        $this->rewardTransactions()->create([
+            'points' => $points,
+            'type' => 'earned',
+            'description' => $description,
+            'order_id' => $orderId,
+        ]);
+    }
+
+    public function deductRewardPoints(int $points, string $description, ?int $orderId = null): bool
+    {
+        if ($this->reward_points < $points) {
+            return false;
+        }
+
+        $this->decrement('reward_points', $points);
+
+        $this->rewardTransactions()->create([
+            'points' => -$points,
+            'type' => 'redeemed',
+            'description' => $description,
+            'order_id' => $orderId,
+        ]);
+
+        return true;
+    }
 }

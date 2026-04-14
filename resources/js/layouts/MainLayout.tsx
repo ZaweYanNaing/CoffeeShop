@@ -90,6 +90,12 @@ const MainLayout = () => {
                                             >
                                                 My reservations
                                             </Link>
+                                            <Link
+                                                to="/rewards"
+                                                className="block px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-700"
+                                            >
+                                                Rewards
+                                            </Link>
                                         </>
                                     )}
                                     <button

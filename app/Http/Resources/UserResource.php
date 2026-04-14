@@ -28,6 +28,7 @@ class UserResource extends JsonResource
             'is_admin' => $this->is_admin ?? false,
             'is_banned' => $this->isBanned(),
             'banned_at' => $this->banned_at?->toDateTimeString(),
+            'reward_points' => $this->reward_points ?? 0,
             'created_at' => $this->created_at?->toDateTimeString(),
             'orders_count' => $this->whenCounted('orders'),
             'reservations_count' => $this->whenCounted('reservations'),

@@ -13,6 +13,7 @@ import Reservations from './pages/Reservations';
 import Profile from './pages/Profile';
 import OrderHistory from './pages/OrderHistory';
 import ReservationHistory from './pages/ReservationHistory';
+import Rewards from './pages/Rewards';
 import AdminDashboard from './pages/Admin/Dashboard';
 import AdminProducts from './pages/Admin/Products';
 import AdminCategories from './pages/Admin/Categories';
@@ -52,6 +53,14 @@ const router = createBrowserRouter([
                 element: (
                     <ProtectedRoute>
                         <ReservationHistory />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: '/rewards',
+                element: (
+                    <ProtectedRoute>
+                        <Rewards />
                     </ProtectedRoute>
                 ),
             },

@@ -20,6 +20,7 @@ class OrderResource extends JsonResource
             'status' => $this->status,
             'payment_status' => $this->payment_status,
             'payment_method' => $this->payment_method,
+            'payment_proof' => $this->payment_proof ? \Illuminate\Support\Facades\Storage::url($this->payment_proof) : null,
             'created_at' => $this->created_at->toIso8601String(),
             'user' => $this->when($request->user()?->is_admin, function () {
                 return [

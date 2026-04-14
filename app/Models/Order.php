@@ -15,6 +15,7 @@ class Order extends Model
         'status', // pending, processing, completed, cancelled
         'payment_status', // pending, paid, failed
         'payment_method',
+        'payment_proof',
     ];
 
     protected $casts = [

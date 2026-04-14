@@ -17,11 +17,15 @@ class Product extends Model
         'price',
         'image',
         'is_available',
+        'points_cost',
+        'points_reward',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
         'is_available' => 'boolean',
+        'points_cost' => 'integer',
+        'points_reward' => 'integer',
     ];
 
     public function category()
