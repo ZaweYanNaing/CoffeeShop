@@ -14,6 +14,7 @@ import Profile from './pages/Profile';
 import OrderHistory from './pages/OrderHistory';
 import ReservationHistory from './pages/ReservationHistory';
 import Rewards from './pages/Rewards';
+import About from './pages/About';
 import AdminDashboard from './pages/Admin/Dashboard';
 import AdminProducts from './pages/Admin/Products';
 import AdminCategories from './pages/Admin/Categories';
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
         children: [
             { path: '/', element: <Home /> },
             { path: '/menu', element: <Menu /> },
+            { path: '/about', element: <About /> },
             { path: '/cart', element: <Cart /> },
             { path: '/login', element: <Login /> },
             { path: '/register', element: <Register /> },

@@ -253,6 +253,24 @@ const Cart = () => {
                             )}
                         </div>
 
+                        {cashTotal > 0 && (
+                            <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-800 rounded-lg">
+                                <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2 flex items-center gap-2">
+                                    <CreditCard size={18} />
+                                    Bank Transfer Information
+                                </h3>
+                                <div className="space-y-2 text-sm">
+                                    <div>
+                                        <p className="text-blue-700 dark:text-blue-300 font-medium">Transfer to:</p>
+                                        <p className="text-blue-900 dark:text-blue-100 font-bold text-lg">09766553370</p>
+                                    </div>
+                                    <p className="text-blue-600 dark:text-blue-400 text-xs">
+                                        Please transfer the exact amount and upload the payment proof below
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+
                         {pointsTotal > rewardPoints && (
                             <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
                                 <p className="text-sm text-red-600 dark:text-red-400">
@@ -288,7 +306,7 @@ const Cart = () => {
                                     </div>
                                 )}
                                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                                    Please upload a screenshot or photo of your bank transfer
+                                    Upload screenshot of your transfer to 09766553370
                                 </p>
                             </div>
                         )}

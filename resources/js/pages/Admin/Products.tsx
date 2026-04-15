@@ -164,7 +164,7 @@ const Products = () => {
             <div className="mb-6 flex items-center justify-between">
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Products</h1>
-                    <p className="text-gray-600 dark:text-gray-400">Manage your coffee shop products</p>
+                    <p className="text-gray-600 dark:text-gray-400">Manage your Brew Haven products</p>
                 </div>
                 <button
                     onClick={handleCreate}
