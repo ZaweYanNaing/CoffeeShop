@@ -34,7 +34,7 @@ const MainLayout = () => {
             <nav className="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
                 <div className="container mx-auto px-4 py-3 flex justify-between items-center">
                     <Link to="/" className="text-xl font-bold text-amber-700 dark:text-amber-500 flex items-center gap-2">
-                        🏠☕ Brew Haven
+                        🏠☕ The Daily Grind
                     </Link>
 
                     <div className="hidden md:flex space-x-6 items-center">
@@ -132,7 +132,7 @@ const MainLayout = () => {
                         <div className="space-y-4">
                             <div className="flex items-center gap-2">
                                 <span className="text-3xl">🏠☕</span>
-                                <h3 className="text-xl font-bold text-amber-700 dark:text-amber-500">Brew Haven</h3>
+                                <h3 className="text-xl font-bold text-amber-700 dark:text-amber-500">The Daily Grind</h3>
                             </div>
                             <p className="text-sm text-gray-600 dark:text-gray-400">
                                 Your cozy sanctuary for exceptional coffee. Where every brew feels like home.
@@ -205,7 +205,7 @@ const MainLayout = () => {
                     {/* Bottom Bar */}
                     <div className="border-t border-amber-200 dark:border-gray-700 mt-8 pt-6 text-center">
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                            &copy; {new Date().getFullYear()} Brew Haven. All rights reserved. Made with ❤️ and ☕
+                            &copy; {new Date().getFullYear()} The Daily Grind. All rights reserved. Made with ❤️ and ☕
                         </p>
                     </div>
                 </div>

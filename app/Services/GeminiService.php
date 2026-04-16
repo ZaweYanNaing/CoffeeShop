@@ -106,7 +106,7 @@ class GeminiService
         })->join("\n");
 
         return <<<PROMPT
-You are a friendly and knowledgeable AI Coffee Concierge for Brew Haven, a cozy coffee shop. Your role is to help customers find the perfect drink or food item from our menu based on their preferences.
+You are a friendly and knowledgeable AI Coffee Concierge for The Daily Grind, a cozy coffee shop. Your role is to help customers find the perfect drink or food item from our menu based on their preferences.
 
 Our Current Menu:
 {$menuItems}

@@ -9,7 +9,7 @@ const About = () => {
                 <div className="container mx-auto px-4">
                     <div className="max-w-3xl mx-auto text-center">
                         <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-6">
-                            About Brew Haven
+                            About The Daily Grind
                         </h1>
                         <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
                             Your cozy sanctuary for exceptional coffee. Where every brew feels like home.
@@ -28,7 +28,7 @@ const About = () => {
                         </div>
                         <div className="prose prose-lg dark:prose-invert mx-auto text-gray-600 dark:text-gray-300">
                             <p className="text-lg leading-relaxed mb-6">
-                                Founded in 2024, Brew Haven began with a simple dream: to create a warm, welcoming space 
+                                Founded in 2024, The Daily Grind began with a simple dream: to create a warm, welcoming space 
                                 where coffee lovers could gather, connect, and enjoy exceptional brews crafted with passion 
                                 and precision.
                             </p>
@@ -38,7 +38,7 @@ const About = () => {
                                 the world, roast them to perfection, and serve each cup with care.
                             </p>
                             <p className="text-lg leading-relaxed">
-                                At Brew Haven, we believe coffee is more than just a beverage—it's an experience, a moment 
+                                At The Daily Grind, we believe coffee is more than just a beverage—it's an experience, a moment 
                                 of comfort, and a reason to slow down and savor life's simple pleasures.
                             </p>
                         </div>
@@ -152,7 +152,7 @@ const About = () => {
             <div className="py-20 bg-gradient-to-br from-amber-600 to-orange-600 dark:from-amber-700 dark:to-orange-700">
                 <div className="container mx-auto px-4 text-center">
                     <h2 className="text-3xl font-bold text-white mb-6">
-                        Ready to Experience Brew Haven?
+                        Ready to Experience The Daily Grind?
                     </h2>
                     <p className="text-xl text-amber-50 mb-8 max-w-2xl mx-auto">
                         Join our community of coffee lovers and discover your new favorite brew.

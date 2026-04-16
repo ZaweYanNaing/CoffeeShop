@@ -1,4 +1,4 @@
-# Brew Haven ☕🏠
+# The Daily Grind ☕🏠
 
 A modern coffee shop management system with customer ordering, rewards program, admin dashboard, and AI-powered recommendations.
 

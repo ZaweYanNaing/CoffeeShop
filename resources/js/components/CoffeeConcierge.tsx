@@ -14,7 +14,7 @@ const CoffeeConcierge = () => {
     const [messages, setMessages] = useState<Message[]>([
         {
             id: '1',
-            text: "Hi! I'm your AI Coffee Concierge at Brew Haven. I can help you find the perfect drink or snack based on your preferences. What are you in the mood for today?",
+            text: "Hi! I'm your AI Coffee Concierge at The Daily Grind. I can help you find the perfect drink or snack based on your preferences. What are you in the mood for today?",
             sender: 'bot',
             timestamp: new Date(),
         }

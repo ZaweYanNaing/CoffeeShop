@@ -139,7 +139,7 @@ const AdminDashboard = () => {
         <div>
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Admin Dashboard</h1>
-                <p className="text-gray-600 dark:text-gray-400">Welcome back! Here's an overview of Brew Haven.</p>
+                <p className="text-gray-600 dark:text-gray-400">Welcome back! Here's an overview of The Daily Grind.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
