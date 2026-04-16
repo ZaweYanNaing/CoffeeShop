@@ -3,6 +3,7 @@ import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { Moon, Sun, ShoppingCart, User, LogOut, ChevronDown } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
+import CoffeeConcierge from '../components/CoffeeConcierge';
 
 const MainLayout = () => {
     const [isDarkMode, setIsDarkMode] = React.useState(false);
@@ -120,6 +121,9 @@ const MainLayout = () => {
             <main className="grow">
                 <Outlet />
             </main>
+
+            {/* AI Coffee Concierge - only show for non-admin users */}
+            {!user?.is_admin && <CoffeeConcierge />}
 
             <footer className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-gray-800 dark:to-gray-900 border-t border-amber-200 dark:border-gray-700 mt-12">
                 <div className="container mx-auto px-4 py-12">
